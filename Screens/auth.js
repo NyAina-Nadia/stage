@@ -1,33 +1,79 @@
-// auth.js
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet ,Dimensions} from 'react-native';
+import { Button, Input } from 'react-native-elements';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../api/api';
 
+const RegisterScreen = ({ navigation }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-const API_URL = 'http://127.0.0.1:8000/api/';
-
-export const register = async (username, email, password) => {
-  try {
-    const response = await axios.post(`${API_URL}register/`, { username, email, password });
-    return response.data;
-  } catch (error) {
-    console.error('Error during registration:', error);
-    throw error.response ? error.response.data : { message: 'Network error' };
-  }
+  const handleRegister = async () => {
+    try {
+      const response = await api.post('/register/', {
+        username: username, // Assurez-vous que les clés sont entourées de guillemets doubles en JSON
+        password: password  // Assurez-vous que les clés sont entourées de guillemets doubles en JSON
+      });
+      navigation.navigate('Login');
+    } catch (e) {
+      setError('Error registering user');
+      console.error(e.response?.data || e.message); // Afficher les erreurs de réponse
+    }
 };
 
-export const login = async (username, password) => {
-  try {
-    const response = await axios.post(`${API_URL}login/`, { username, password });
-    const { access, refresh } = response.data;
-    await AsyncStorage.setItem('access_token', access);
-    await AsyncStorage.setItem('refresh_token', refresh);
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
+  return (
+    <View style={styles.container}>
+      
+      <Text style={styles.header}>REGISTER</Text>
+      <Input
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
+      />
+      <Input
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
+      />
+      <Button title="Register" onPress={handleRegister} buttonStyle={styles.button} />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+    </View>
+  );
 };
 
-export const logout = async () => {
-  await AsyncStorage.removeItem('access_token');
-  await AsyncStorage.removeItem('refresh_token');
-};
+const { width } = Dimensions.get('window');
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+    backgroundColor: '#f8f9fa',
+  },
+  header: {
+    fontSize: 24,
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  input: {
+    paddingHorizontal: 8,
+  },
+  button: {
+    backgroundColor: '#007bff',
+  },
+  error: {
+    color: 'red',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+});
+
+export default RegisterScreen;
