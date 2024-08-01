@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Button, Input } from 'react-native-elements';
-import axios from 'axios';
-
-const API_URL = 'http://127.0.0.1:8000';
+import { register } from './auth';
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -12,14 +10,11 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post(`${API_URL}/register/`, {
-        username: username,
-        password: password
-      });
+      const response = await register(username, '', password);
       navigation.navigate('Login');
     } catch (e) {
-      setError('Error registering user');
-      console.error(e.response?.data || e.message);
+      setError(e.message || 'Error registering user');
+      console.error('Registration error:', e);
     }
   };
 
