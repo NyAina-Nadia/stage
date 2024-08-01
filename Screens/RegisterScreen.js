@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet ,Dimensions} from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import axios from 'axios';
-import api from '../api/api';
+
+const API_URL = 'http://127.0.0.1:8000';
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -11,20 +12,19 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
-      const response = await api.post('/register/', {
-        username: username, // Assurez-vous que les clés sont entourées de guillemets doubles en JSON
-        password: password  // Assurez-vous que les clés sont entourées de guillemets doubles en JSON
+      const response = await axios.post(`${API_URL}/register/`, {
+        username: username,
+        password: password
       });
       navigation.navigate('Login');
     } catch (e) {
       setError('Error registering user');
-      console.error(e.response?.data || e.message); // Afficher les erreurs de réponse
+      console.error(e.response?.data || e.message);
     }
-};
+  };
 
   return (
     <View style={styles.container}>
-      
       <Text style={styles.header}>REGISTER</Text>
       <Input
         placeholder="Username"
