@@ -10,7 +10,8 @@ export const register = async (username, email, password) => {
     const response = await axios.post(`${API_URL}register/`, { username, email, password });
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    console.error('Error during registration:', error);
+    throw error.response ? error.response.data : { message: 'Network error' };
   }
 };
 
