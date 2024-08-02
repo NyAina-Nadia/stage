@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet ,Dimensions} from 'react-native';
 import { Button, Input } from 'react-native-elements';
+<<<<<<< HEAD
 //import api from '../api/api';
 import axios from 'axios';
+=======
+import axios from 'axios';
+import api from '../api/api';
+
+>>>>>>> d0876bb6705b4dc24c4e579fab6646ccd21141e7
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -10,19 +16,26 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
+<<<<<<< HEAD
       const response =  axios.post('/register/',{
         username:username,
         password: password
+=======
+      const response = await api.post('/register/', {
+        username: username, // Assurez-vous que les clés sont entourées de guillemets doubles en JSON
+        password: password  // Assurez-vous que les clés sont entourées de guillemets doubles en JSON
+>>>>>>> d0876bb6705b4dc24c4e579fab6646ccd21141e7
       });
       navigation.navigate('Login');
     } catch (e) {
-      setError(e.message || 'Error registering user');
-      console.error('Registration error:', e);
+      setError('Error registering user');
+      console.error(e.response?.data || e.message); // Afficher les erreurs de réponse
     }
-  };
+};
 
   return (
     <View style={styles.container}>
+      
       <Text style={styles.header}>REGISTER</Text>
       <Input
         placeholder="Username"
