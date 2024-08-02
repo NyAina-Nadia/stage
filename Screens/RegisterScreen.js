@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Button, Input } from 'react-native-elements';
-import { register } from './auth';
-
+//import api from '../api/api';
+import axios from 'axios';
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -10,7 +10,10 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
-      const response = await register(username, '', password);
+      const response =  axios.post('/register/',{
+        username:username,
+        password: password
+      });
       navigation.navigate('Login');
     } catch (e) {
       setError(e.message || 'Error registering user');
