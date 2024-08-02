@@ -13,7 +13,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response =  axios.post('http://127.0.0.1:8000/api/auth/login/', { username, password });
+      const response =  axios.post('/login/', { username, password });
       await AsyncStorage.setItem('access', response.data.access);
       await AsyncStorage.setItem('refresh', response.data.refresh);
       navigation.navigate('Home');
